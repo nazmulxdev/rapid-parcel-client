@@ -6,7 +6,8 @@ import Router from "./Router/Router";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={Router}></RouterProvider>
+    <div className="max-w-[93.75rem] mx-auto">
+      <RouterProvider router={Router}></RouterProvider>
+    </div>
   </StrictMode>,
 );
- 
