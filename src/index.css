@@ -5,3 +5,22 @@
 * {
   font-family: "Urbanist", sans-serif;
 }
+
+.swiper-slide {
+  opacity: 0.5;
+  transition: all 0.4s ease;
+}
+.swiper-slide.swiper-slide-active {
+  opacity: 1;
+  transform: scale(1.05);
+}
+.custom-bullet {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background-color: #cbd5e1;
+  transition: background-color 0.3s ease;
+}
+.custom-bullet-active {
+  background-color: #03373d;
+}
