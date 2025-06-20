@@ -7,6 +7,7 @@
   default: true;
   --color-primary: #caeb66;
   --color-primary-content: black;
+  --color-xyz: #03373d;
 }
 
 * {
