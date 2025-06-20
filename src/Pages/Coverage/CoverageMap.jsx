@@ -12,7 +12,7 @@ const FlyToDistrict = ({ district }) => {
   const map = useMap();
 
   if (district) {
-    map.flyTo([district.latitude, district.longitude], 11);
+    map.flyTo([district.latitude, district.longitude], 14);
   }
 
   return null;
@@ -27,7 +27,7 @@ const CoverageMap = ({ districts, selectedDistrict }) => {
       <div className="w-full h-[50rem]">
         <MapContainer
           center={[23.685, 90.3563]}
-          zoom={8}
+          zoom={7}
           scrollWheelZoom={true}
           className="w-full h-full"
         >

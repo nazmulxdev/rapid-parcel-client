@@ -37,7 +37,7 @@ const Coverage = () => {
           className="input input-bordered w-full sm:max-w-xs"
         />
         <button className="btn btn-primary" type="submit">
-          Search
+          Go
         </button>
       </form>
 
