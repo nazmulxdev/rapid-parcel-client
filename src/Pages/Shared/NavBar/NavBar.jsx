@@ -1,4 +1,4 @@
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
 import RapidParcelLogo from "../RapidParcelLogo.jsx/RapidParcelLogo";
 const NavBar = () => {
   const links = (
@@ -10,7 +10,7 @@ const NavBar = () => {
         <NavLink to="/coverage">Coverage</NavLink>
       </li>
       <li>
-        <NavLink to="/">Home</NavLink>
+        <NavLink to="/sendParcel">Send A Parcel</NavLink>
       </li>
       <li>
         <NavLink to="/">Home</NavLink>
@@ -51,7 +51,9 @@ const NavBar = () => {
         <ul className="menu menu-horizontal px-1">{links}</ul>
       </div>
       <div className="navbar-end">
-        <a className="btn">Button</a>
+        <Link to="/login" className="btn btn-primary">
+          LogIn
+        </Link>
       </div>
     </div>
   );
