@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink, Outlet } from "react-router";
+import RapidParcelLogo from "../Pages/Shared/RapidParcelLogo.jsx/RapidParcelLogo";
 
 const DashBoardLayOut = () => {
   return (
@@ -41,11 +42,12 @@ const DashBoardLayOut = () => {
         ></label>
         <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
           {/* Sidebar content here */}
+          <RapidParcelLogo></RapidParcelLogo>
           <li>
-            <a>Sidebar Item 1</a>
+            <NavLink>Home</NavLink>
           </li>
           <li>
-            <a>Sidebar Item 2</a>
+            <NavLink to="/dashboard/myParcels">My Parcels</NavLink>
           </li>
         </ul>
       </div>
