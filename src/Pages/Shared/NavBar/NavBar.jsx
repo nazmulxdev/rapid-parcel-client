@@ -1,19 +1,29 @@
 import { Link, NavLink } from "react-router";
 import RapidParcelLogo from "../RapidParcelLogo.jsx/RapidParcelLogo";
+import useAuth from "../../../Hooks/useAuth";
 const NavBar = () => {
+  const { currentUser } = useAuth();
   const links = (
     <>
       <li>
         <NavLink to="/">Home</NavLink>
       </li>
-      <li>
-        <NavLink to="/coverage">Coverage</NavLink>
-      </li>
+
       <li>
         <NavLink to="/sendParcel">Send A Parcel</NavLink>
       </li>
       <li>
-        <NavLink to="/">Home</NavLink>
+        <NavLink to="/coverage">Coverage</NavLink>
+      </li>
+      {currentUser && (
+        <>
+          <li>
+            <NavLink to="/dashboard">Dashboard</NavLink>
+          </li>
+        </>
+      )}
+      <li>
+        <NavLink to="/">about Us</NavLink>
       </li>
     </>
   );

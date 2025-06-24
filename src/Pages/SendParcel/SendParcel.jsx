@@ -3,6 +3,15 @@ import toast, { Toaster } from "react-hot-toast";
 import dayjs from "dayjs";
 import { useState } from "react";
 import warehouses from "../../data/warehouses.json";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import useAuth from "../../Hooks/useAuth";
+
+// 🆔 Generate unique tracking ID
+const generateTrackingId = () => {
+  const random = Math.random().toString(36).substring(2, 8).toUpperCase();
+  const time = Date.now().toString().slice(-6);
+  return `RP-${time}-${random}`; // Format: RP-123456-A1B2C3
+};
 
 // 🔁 Unique regions from warehouse
 const regions = [...new Set(warehouses.map((w) => w.region))];
@@ -11,8 +20,10 @@ const getCentersByRegion = (region) =>
   warehouses.filter((w) => w.region === region);
 
 const SendParcel = () => {
+  const { currentUser } = useAuth();
   const [showConfirm, setShowConfirm] = useState(false);
   const [cost, setCost] = useState(0);
+  const [breakdown, setBreakdown] = useState(null);
 
   const {
     register,
@@ -22,39 +33,121 @@ const SendParcel = () => {
     formState: { errors },
   } = useForm();
 
+  const axiosSecure = useAxiosSecure();
+
   const type = watch("type");
   const senderRegion = watch("senderRegion");
   const receiverRegion = watch("receiverRegion");
 
   // 💰 Cost Logic
-  const calculateCost = (data) => {
-    const base = data.type === "document" ? 50 : 100;
-    const weightCharge =
-      data.type === "non-document" ? parseFloat(data.weight || 0) * 20 : 0;
-    return base + weightCharge;
+  //   const calculateCost = (data) => {
+  //     const isSameDistrict = data.senderCenter === data.receiverCenter;
+  //     const weight = parseFloat(data.weight || 0);
+
+  //     if (data.type === "document") {
+  //       return isSameDistrict ? 60 : 80;
+  //     }
+
+  //     // Type: non-document
+  //     if (weight <= 3) {
+  //       return isSameDistrict ? 110 : 150;
+  //     } else {
+  //       const extraWeight = weight - 3;
+  //       const extraCharge = extraWeight * 40;
+
+  //       if (isSameDistrict) {
+  //         return 110 + extraCharge;
+  //       } else {
+  //         return 150 + extraCharge + 40; // 40 extra for outside city
+  //       }
+  //     }
+  //   };
+
+  // new logic for price calculation
+
+  const calculateCostWithBreakdown = (data) => {
+    const isSameDistrict = data.senderCenter === data.receiverCenter;
+    const weight = parseFloat(data.weight || 0);
+    let breakdown = {};
+    let total = 0;
+
+    if (data.type === "document") {
+      breakdown = {
+        base: isSameDistrict ? 60 : 80,
+        location: isSameDistrict ? "Within City" : "Outside District",
+        type: "Document",
+      };
+      total = breakdown.base;
+    } else {
+      // non-document
+      const base = isSameDistrict ? 110 : 150;
+      breakdown = {
+        base,
+        type: "Non-Document",
+        location: isSameDistrict ? "Within City" : "Outside District",
+        weight,
+        extra: 0,
+      };
+
+      if (weight > 3) {
+        const extraWeight = weight - 3;
+        const extraCharge = extraWeight * 40;
+        breakdown.extra = extraCharge;
+
+        if (!isSameDistrict) {
+          breakdown.outsideExtra = 40;
+          total = base + extraCharge + 40;
+        } else {
+          total = base + extraCharge;
+        }
+      } else {
+        total = base;
+      }
+    }
+
+    return { breakdown, total };
   };
 
   // 🚀 On Form Submit
+  //   const onSubmit = (data) => {
+  //     const deliveryCost = calculateCost(data);
+  //     setCost(deliveryCost);
+  //     setShowConfirm(true);
+  //     toast.success(`Delivery cost: ৳${deliveryCost}`);
+  //   };
+
+  // update on submit form
+
   const onSubmit = (data) => {
-    const deliveryCost = calculateCost(data);
-    setCost(deliveryCost);
+    const { breakdown, total } = calculateCostWithBreakdown(data);
+    setCost(total);
+    setBreakdown(breakdown); // add new state
     setShowConfirm(true);
-    toast.success(`Delivery cost: ৳${deliveryCost}`);
+    toast.success(`Delivery cost: ৳${total}`);
   };
 
   // ✅ Final Confirm
   const handleConfirm = (data) => {
     const fullData = {
       ...data,
+      tracking_id: generateTrackingId(),
+      senderEmail: currentUser?.email,
       cost,
+      payment_status: "unpaid",
+      delivery_status: "pending",
       creation_date: dayjs().format("YYYY-MM-DD HH:mm:ss"),
     };
 
     console.log("📦 Parcel Saved:", fullData);
-
-    toast.success("Parcel Info Saved!");
-    reset();
-    setShowConfirm(false);
+    axiosSecure.post("/parcels", fullData).then((res) => {
+      console.log(res.data);
+      if (res.data.insertedId) {
+        // Todo: redirect to the payment page
+        toast.success(`Parcel Confirmed! Tracking ID: ${fullData.tracking_id}`);
+        reset();
+        setShowConfirm(false);
+      }
+    });
   };
 
   return (
@@ -133,7 +226,7 @@ const SendParcel = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input
               type="text"
-              defaultValue="Nazmul"
+              defaultValue={currentUser?.displayName}
               {...register("senderName", { required: "Name is required" })}
               className="input input-bordered w-full"
               placeholder="Name"
@@ -267,18 +360,54 @@ const SendParcel = () => {
         </button>
       </form>
 
-      {showConfirm && (
-        <div className="mt-6 p-4 border border-primary rounded-lg text-center space-y-2">
-          <h4 className="text-lg font-semibold">Confirm Delivery</h4>
-          <p>
-            Total Cost: <span className="text-primary font-bold">৳{cost}</span>
-          </p>
-          <button
-            onClick={handleSubmit(handleConfirm)}
-            className="btn btn-success"
-          >
-            Confirm
-          </button>
+      {showConfirm && breakdown && (
+        <div className="mt-6 p-4 border border-primary rounded-lg text-center space-y-4">
+          <h4 className="text-lg font-semibold">🧾 Pricing Breakdown</h4>
+          <ul className="list-disc list-inside text-left text-sm">
+            <li>Type: {breakdown.type}</li>
+            <li>Delivery: {breakdown.location}</li>
+            <li>Base Price: ৳{breakdown.base}</li>
+            {breakdown.weight > 3 && (
+              <>
+                <li>
+                  Extra Weight Charge (৳40/kg over 3kg): ৳{breakdown.extra}
+                </li>
+                {breakdown.outsideExtra && (
+                  <li>Outside District Extra Fee: ৳{breakdown.outsideExtra}</li>
+                )}
+              </>
+            )}
+          </ul>
+
+          <div className="text-lg font-bold text-green-600">
+            ✅ Total Cost: ৳{cost}
+          </div>
+
+          <div className="flex flex-col sm:flex-row justify-center gap-3 mt-4">
+            <button
+              onClick={handleSubmit(handleConfirm)}
+              className="btn btn-success w-full sm:w-auto"
+            >
+              Confirm
+            </button>
+            <button
+              onClick={() => setShowConfirm(false)}
+              className="btn btn-warning w-full sm:w-auto"
+            >
+              Modify
+            </button>
+            <button
+              onClick={() => {
+                reset();
+                setShowConfirm(false);
+                setBreakdown(null);
+                toast("Parcel submission canceled");
+              }}
+              className="btn btn-error w-full sm:w-auto"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       )}
     </div>
