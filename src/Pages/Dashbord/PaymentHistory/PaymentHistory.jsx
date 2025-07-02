@@ -34,34 +34,40 @@ const PaymentHistory = () => {
         My Payment History
       </h2>
 
-      <div className="overflow-x-auto bg-white shadow-xl rounded-2xl">
-        <table className="table table-zebra w-full">
-          <thead className="bg-base-200 text-base font-semibold text-gray-700">
-            <tr>
-              <th>No.</th>
-              <th>Amount</th>
-              <th>Payment Method</th>
-              <th>Card Info</th>
-              <th>Transaction ID</th>
-              <th>Paid At</th>
-            </tr>
-          </thead>
-          <tbody>
-            {payments.map((payment, index) => (
-              <tr key={payment._id}>
-                <td>{index + 1}</td>
-                <td>${payment.amount}</td>
-                <td>{payment.paymentMethod}</td>
-                <td>
-                  {payment.cardBrand.toUpperCase()} **** {payment.cardLast4}
-                </td>
-                <td className="break-all">{payment.transactionId}</td>
-                <td>{new Date(payment.paid_at).toLocaleString()}</td>
+      {payments.length === 0 ? (
+        <div className="text-center py-10 text-gray-500">
+          <p>No payments found.</p>
+        </div>
+      ) : (
+        <div className="overflow-x-auto bg-white shadow-xl rounded-2xl">
+          <table className="table table-zebra w-full">
+            <thead className="bg-base-200 text-base font-semibold text-gray-700">
+              <tr>
+                <th>#</th>
+                <th>Amount</th>
+                <th>Payment Method</th>
+                <th>Card Info</th>
+                <th>Transaction ID</th>
+                <th>Paid At</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {payments.map((payment, index) => (
+                <tr key={payment._id}>
+                  <td>{index + 1}</td>
+                  <td>${payment.amount}</td>
+                  <td>{payment.paymentMethod}</td>
+                  <td>
+                    {payment.cardBrand.toUpperCase()} **** {payment.cardLast4}
+                  </td>
+                  <td className="break-all">{payment.transactionId}</td>
+                  <td>{new Date(payment.paid_at).toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,25 +1,61 @@
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import RapidParcelLogo from "../Shared/RapidParcelLogo.jsx/RapidParcelLogo";
 import { useForm } from "react-hook-form";
 import useAuth from "../../Hooks/useAuth";
 import SocialLogIn from "./SocialLogIn";
+import axios from "axios";
+import { useState } from "react";
+import Swal from "sweetalert2";
 
 const Register = () => {
-  const { createUser } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { createUser, updateUserProfile } = useAuth();
+  const [profilePic, setProfilePic] = useState("");
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
   const onSubmitData = (data) => {
     console.log(data);
     createUser(data.email, data.password)
       .then((user) => {
         console.log(user.user);
+        // update info in the database
+
+        // update user profile in the firebase
+        updateUserProfile({ displayName: data.name, photoURL: profilePic })
+          .then(() => {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Registration Successful",
+              showConfirmButton: false,
+              timer: 1500,
+            }).then(() => {
+              navigate(location?.state ? location.state : "/");
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       })
       .catch((error) => {
         console.log(error.message);
       });
+  };
+
+  const handleImageUpload = async (e) => {
+    const image = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image", image);
+    const imageUploadUrl = `https://api.imgbb.com/1/upload?key=${
+      import.meta.env.VITE_IMAGEBB_KEY
+    }`;
+    const res = await axios.post(imageUploadUrl, formData);
+    setProfilePic(res.data.data.url);
   };
   return (
     <div className="p-12">
@@ -32,6 +68,15 @@ const Register = () => {
             onSubmit={handleSubmit(onSubmitData)}
             className="fieldset space-y-1"
           >
+            {/* profile pic */}
+            <label className="label text-lg font-medium">Profile Picture</label>
+            <input
+              {...register("imageUrl", { required: true })}
+              type="file"
+              onChange={handleImageUpload}
+              className="input w-full"
+              placeholder="Your Profile Picture"
+            />
             {/* Name */}
             <label className="label text-lg font-medium">Name</label>
             <input
