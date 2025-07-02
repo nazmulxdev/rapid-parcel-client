@@ -50,8 +50,26 @@ const PaymentForm = () => {
       console.log("payment method", paymentMethod);
       setMessage("Pending Payment ");
       //   setLoading(false);
+      const response = await axiosSecure.post("/create-payment-intent", {
+        amount,
+      });
+      const clientSecret = response.data.clientSecret;
+      const result = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: elements.getElement(CardElement),
+          billing_details: {
+            name: parcelInfo.receiverName,
+          },
+        },
+      });
+      if (result.error) {
+        setMessage(result.error.message);
+      } else {
+        if (result.paymentIntent.status === "succeeded") {
+          setMessage("Payment Successful");
+        }
+      }
     }
-    // console.log(parcelInfo);
   };
   return (
     <form
