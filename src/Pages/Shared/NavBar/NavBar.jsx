@@ -2,7 +2,14 @@ import { Link, NavLink } from "react-router";
 import RapidParcelLogo from "../RapidParcelLogo.jsx/RapidParcelLogo";
 import useAuth from "../../../Hooks/useAuth";
 const NavBar = () => {
-  const { currentUser } = useAuth();
+  const { currentUser,logOut } = useAuth();
+  const handleLogOut=()=>{
+    logOut().then((res)=>{
+      console.log(res);
+    }).catch(error=>{
+      console.log(error);
+    })
+  }
   const links = (
     <>
       <li>
@@ -61,9 +68,13 @@ const NavBar = () => {
         <ul className="menu menu-horizontal px-1">{links}</ul>
       </div>
       <div className="navbar-end">
-        <Link to="/login" className="btn btn-primary">
-          LogIn
-        </Link>
+        {currentUser ? (
+          <button onClick={handleLogOut} className="btn btn-primary">LogOut</button>
+        ) : (
+          <Link to="/login" className="btn btn-primary">
+            LogIn
+          </Link>
+        )}
       </div>
     </div>
   );

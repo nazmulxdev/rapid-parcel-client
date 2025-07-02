@@ -55,7 +55,7 @@ const MyParcels = () => {
             });
             // refetch parcels or invalidate query to update UI
 
-            // refetch(); 
+            // refetch();
             queryClient.invalidateQueries(["my-parcels", currentUser.email]);
           }
         });

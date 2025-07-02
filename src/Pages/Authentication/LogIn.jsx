@@ -1,9 +1,14 @@
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import RapidParcelLogo from "../Shared/RapidParcelLogo.jsx/RapidParcelLogo";
 import { useForm } from "react-hook-form";
 import SocialLogIn from "./SocialLogIn";
 import LoadingSpinner from "../Shared/Utilities/LoadingSpinner";
+import useAuth from "../../Hooks/useAuth";
 const LogIn = () => {
+  const { signInEmail, setCurrentUser } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state;
   const {
     register,
     handleSubmit,
@@ -11,6 +16,15 @@ const LogIn = () => {
   } = useForm();
   const onSubmitData = (data) => {
     console.log(data);
+    signInEmail(data.email, data.password)
+      .then((res) => {
+        console.log(res);
+        setCurrentUser(data.user);
+        navigate(from ? from : "/");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   return (
     <div className="p-12">
