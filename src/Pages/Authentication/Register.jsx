@@ -6,10 +6,12 @@ import SocialLogIn from "./SocialLogIn";
 import axios from "axios";
 import { useState } from "react";
 import Swal from "sweetalert2";
+import useAxios from "../../Hooks/useAxios";
 
 const Register = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const axiosInstance = useAxios();
   const { createUser, updateUserProfile } = useAuth();
   const [profilePic, setProfilePic] = useState("");
   const {
@@ -21,9 +23,20 @@ const Register = () => {
   const onSubmitData = (data) => {
     console.log(data);
     createUser(data.email, data.password)
-      .then((user) => {
+      .then(async (user) => {
         console.log(user.user);
         // update info in the database
+
+        const userInfo = {
+          name: data.name,
+          email: data.email,
+          role: "user",
+          created_at: new Date().toISOString(),
+          last_log_in: new Date().toISOString(),
+        };
+
+        const userRes = await axiosInstance.post("/users", userInfo);
+        console.log(userRes.data);
 
         // update user profile in the firebase
         updateUserProfile({ displayName: data.name, photoURL: profilePic })

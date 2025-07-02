@@ -1,15 +1,19 @@
 import { Link, NavLink } from "react-router";
 import RapidParcelLogo from "../RapidParcelLogo.jsx/RapidParcelLogo";
 import useAuth from "../../../Hooks/useAuth";
+import useAxios from "../../../Hooks/useAxios";
 const NavBar = () => {
-  const { currentUser,logOut } = useAuth();
-  const handleLogOut=()=>{
-    logOut().then((res)=>{
-      console.log(res);
-    }).catch(error=>{
-      console.log(error);
-    })
-  }
+  const { currentUser, logOut } = useAuth();
+  const axiosInstance = useAxios();
+  const handleLogOut = () => {
+    logOut()
+      .then(async () => {
+        await axiosInstance.post("/logout", {}, { withCredentials: true });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const links = (
     <>
       <li>
@@ -69,7 +73,9 @@ const NavBar = () => {
       </div>
       <div className="navbar-end">
         {currentUser ? (
-          <button onClick={handleLogOut} className="btn btn-primary">LogOut</button>
+          <button onClick={handleLogOut} className="btn btn-primary">
+            LogOut
+          </button>
         ) : (
           <Link to="/login" className="btn btn-primary">
             LogIn
