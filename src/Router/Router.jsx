@@ -61,7 +61,7 @@ const Router = createBrowserRouter([
         Component: MyParcels,
       },
       {
-        path: "/dashboard/Payment/:id",
+        path: "/dashboard/Payment/:parcelId",
         Component: Payment,
       },
     ],
