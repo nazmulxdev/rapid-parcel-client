@@ -7,6 +7,8 @@ import {
   FaCreditCard,
   FaMapMarkedAlt,
   FaUserEdit,
+  FaUserCheck,
+  FaUserClock,
 } from "react-icons/fa";
 
 const DashBoardLayOut = () => {
@@ -77,6 +79,16 @@ const DashBoardLayOut = () => {
           <li>
             <NavLink to="/dashboard/track">
               <FaMapMarkedAlt className="text-accent" /> Track Parcel
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/dashboard/active-riders">
+              <FaUserCheck className="text-accent" /> Active Riders
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/dashboard/pending-riders">
+              <FaUserClock className="text-accent" /> Pending Rider
             </NavLink>
           </li>
           <li>

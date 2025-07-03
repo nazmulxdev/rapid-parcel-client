@@ -12,6 +12,9 @@ import MyParcels from "../Pages/Dashbord/MyParcels/MyParcels";
 import Payment from "../Pages/Dashbord/Payment/Payment";
 import PaymentHistory from "../Pages/Dashbord/PaymentHistory/PaymentHistory";
 import TrackParcel from "../Pages/Dashbord/TrackParcel/TrackParcel";
+import BeARider from "../Pages/Dashbord/BeARider/BeARider";
+import ActiveRiders from "../Pages/Dashbord/ActiveRiders/ActiveRiders";
+import PendingRiders from "../Pages/Dashbord/PendingRiders/PendingRiders";
 
 const Router = createBrowserRouter([
   {
@@ -27,10 +30,18 @@ const Router = createBrowserRouter([
         Component: Coverage,
       },
       {
-        path: "sendParcel",
+        path: "/sendParcel",
         element: (
           <PrivateRoute>
             <SendParcel></SendParcel>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/be-a-rider",
+        element: (
+          <PrivateRoute>
+            <BeARider></BeARider>
           </PrivateRoute>
         ),
       },
@@ -73,6 +84,14 @@ const Router = createBrowserRouter([
       {
         path: "/dashboard/track",
         Component: TrackParcel,
+      },
+      {
+        path: "/dashboard/active-riders",
+        Component: ActiveRiders,
+      },
+      {
+        path: "/dashboard/pending-riders",
+        Component: PendingRiders,
       },
     ],
   },

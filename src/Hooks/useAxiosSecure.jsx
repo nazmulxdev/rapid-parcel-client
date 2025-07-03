@@ -31,8 +31,10 @@ const useAxiosSecure = () => {
           });
 
           try {
-            await logOut(); // Firebase logout
-            await axiosInstance.post("/logout", {}, { withCredentials: true }); // Backend logout
+            // Firebase logout
+            await logOut();
+            // Backend logout
+            await axiosInstance.post("/logout", {}, { withCredentials: true });
             navigate("/login", {
               state: location.pathname,
               replace: true,
@@ -42,6 +44,28 @@ const useAxiosSecure = () => {
           }
         }
         // you can handle 403 here
+        if (errorStatus === 403) {
+          await Swal.fire({
+            icon: "warning",
+            title: "Unauthorize access.",
+            text: "Please login or create account first.",
+            confirmButtonText: "OK",
+            confirmButtonColor: "#d33",
+          });
+
+          try {
+            // Firebase logout
+            await logOut();
+            // Backend logout
+            await axiosInstance.post("/logout", {}, { withCredentials: true });
+            navigate("/login", {
+              state: location.pathname,
+              replace: true,
+            });
+          } catch (logoutErr) {
+            console.error("Logout failed:", logoutErr);
+          }
+        }
         return Promise.reject(error);
       },
     );
