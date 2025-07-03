@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
+import LoadingSpinner from "../../Shared/Utilities/LoadingSpinner";
 
 const PendingRiders = () => {
   const axiosSecure = useAxiosSecure();
@@ -35,7 +36,7 @@ const PendingRiders = () => {
         Swal.fire("Success!", `Rider ${action}ed successfully.`, "success");
         refetch();
       } catch (err) {
-        Swal.fire("Error!", "Failed to update status.", "error");
+        Swal.fire("Error!", "Failed to update status.", err);
       }
     }
   };
@@ -44,7 +45,7 @@ const PendingRiders = () => {
     <div className="p-4">
       <h2 className="text-2xl font-bold mb-4">Pending Riders</h2>
       {isLoading ? (
-        <p>Loading...</p>
+        <LoadingSpinner></LoadingSpinner>
       ) : riders.length === 0 ? (
         <p className="text-gray-500">No pending riders found.</p>
       ) : (
@@ -52,7 +53,7 @@ const PendingRiders = () => {
           <table className="table table-zebra w-full">
             <thead>
               <tr>
-                <th>#</th>
+                <th>No.</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Region</th>
@@ -79,7 +80,7 @@ const PendingRiders = () => {
                     </button>
                     <button
                       className="btn btn-sm btn-success"
-                      onClick={() => handleAction(rider._id, "accepted")}
+                      onClick={() => handleAction(rider._id, "active")}
                     >
                       Accept
                     </button>
