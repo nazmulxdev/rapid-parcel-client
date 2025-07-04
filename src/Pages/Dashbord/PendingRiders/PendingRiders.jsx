@@ -20,7 +20,7 @@ const PendingRiders = () => {
     },
   });
 
-  const handleAction = async (id, action) => {
+  const handleAction = async (id, action, email) => {
     const result = await Swal.fire({
       title: `Are you sure to ${action} this rider?`,
       icon: "warning",
@@ -32,7 +32,7 @@ const PendingRiders = () => {
 
     if (result.isConfirmed) {
       try {
-        await axiosSecure.patch(`/riders/${id}`, { status: action });
+        await axiosSecure.patch(`/riders/${id}`, { status: action, email });
         Swal.fire("Success!", `Rider ${action}ed successfully.`, "success");
         refetch();
       } catch (err) {
@@ -80,13 +80,17 @@ const PendingRiders = () => {
                     </button>
                     <button
                       className="btn btn-sm btn-success"
-                      onClick={() => handleAction(rider._id, "active")}
+                      onClick={() =>
+                        handleAction(rider._id, "active", rider.email)
+                      }
                     >
                       Accept
                     </button>
                     <button
                       className="btn btn-sm btn-error"
-                      onClick={() => handleAction(rider._id, "cancelled")}
+                      onClick={() =>
+                        handleAction(rider._id, "cancelled", rider.email)
+                      }
                     >
                       Cancel
                     </button>

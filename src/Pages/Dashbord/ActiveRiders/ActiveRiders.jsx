@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
-import debounce from "lodash.debounce"; // if not installed: npm i lodash.debounce
+import debounce from "lodash.debounce";
 import LoadingSpinner from "../../Shared/Utilities/LoadingSpinner";
 
 const ActiveRiders = () => {
