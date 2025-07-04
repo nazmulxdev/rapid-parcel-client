@@ -9,9 +9,13 @@ import {
   FaUserEdit,
   FaUserCheck,
   FaUserClock,
+  FaUserShield,
 } from "react-icons/fa";
+import useUserRole from "../Hooks/useUserRole";
 
 const DashBoardLayOut = () => {
+  const { role, roleLoading } = useUserRole();
+  console.log(role);
   return (
     <div className="drawer md:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
@@ -81,21 +85,32 @@ const DashBoardLayOut = () => {
               <FaMapMarkedAlt className="text-accent" /> Track Parcel
             </NavLink>
           </li>
-          <li>
-            <NavLink to="/dashboard/active-riders">
-              <FaUserCheck className="text-accent" /> Active Riders
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/dashboard/pending-riders">
-              <FaUserClock className="text-accent" /> Pending Rider
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/dashboard/profile">
-              <FaUserEdit className="text-accent" /> Update Profile
-            </NavLink>
-          </li>
+          {/* riders links */}
+          {!roleLoading && role == "admin" && (
+            <>
+              <li>
+                <NavLink to="/dashboard/active-riders">
+                  <FaUserCheck className="text-accent" /> Active Riders
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/dashboard/pending-riders">
+                  <FaUserClock className="text-accent" /> Pending Rider
+                </NavLink>
+              </li>
+              <li>
+                {/* admin links */}
+                <NavLink to="/dashboard/manage-admins">
+                  <FaUserShield className="text-accent" /> Manage Admins
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/dashboard/profile">
+                  <FaUserEdit className="text-accent" /> Update Profile
+                </NavLink>
+              </li>
+            </>
+          )}
         </ul>
       </div>
     </div>

@@ -47,18 +47,18 @@ const useAxiosSecure = () => {
         if (errorStatus === 403) {
           await Swal.fire({
             icon: "warning",
-            title: "Unauthorize access.",
-            text: "Please login or create account first.",
+            title: "Forbidden access.",
+            text: "This route is only for admins.",
             confirmButtonText: "OK",
             confirmButtonColor: "#d33",
           });
 
           try {
             // Firebase logout
-            await logOut();
+            // await logOut();
             // Backend logout
-            await axiosInstance.post("/logout", {}, { withCredentials: true });
-            navigate("/login", {
+            // await axiosInstance.post("/logout", {}, { withCredentials: true });
+            navigate("/forbidden", {
               state: location.pathname,
               replace: true,
             });

@@ -52,9 +52,7 @@ const AuthProvider = ({ children }) => {
           .post("/validation", userData, {
             withCredentials: true,
           })
-          .then((res) => {
-            console.log(res.data);
-          })
+          .then(() => {})
           .catch((error) => {
             console.log(error);
           });
