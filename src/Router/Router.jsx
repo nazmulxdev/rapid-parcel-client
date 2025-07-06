@@ -18,6 +18,9 @@ import PendingRiders from "../Pages/Dashbord/PendingRiders/PendingRiders";
 import AdminUserManager from "../Pages/Dashbord/ManageAdmin/AdminUserManager";
 import Forbidden from "../Pages/Forbidden/Forbidden";
 import AdminRoute from "../Routes/AdminRoute";
+import AssignRider from "../Pages/Dashbord/AssignRider/AssignRider";
+import PendingDeliveries from "../Pages/Dashbord/PendingDeliveries/PendingDeliveries";
+import RidersRoute from "../Routes/RidersRoute";
 
 const Router = createBrowserRouter([
   {
@@ -88,6 +91,16 @@ const Router = createBrowserRouter([
         path: "/dashboard/track",
         Component: TrackParcel,
       },
+      // riders only routes
+      {
+        path: "/dashboard/pendingDeliveries",
+        element: (
+          <RidersRoute>
+            <PendingDeliveries></PendingDeliveries>
+          </RidersRoute>
+        ),
+      },
+      // admin only routes
       {
         path: "/dashboard/active-riders",
         element: (
@@ -101,6 +114,14 @@ const Router = createBrowserRouter([
         element: (
           <AdminRoute>
             <PendingRiders></PendingRiders>
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "/dashboard/assign-riders",
+        element: (
+          <AdminRoute>
+            <AssignRider></AssignRider>
           </AdminRoute>
         ),
       },

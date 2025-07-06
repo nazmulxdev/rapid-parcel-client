@@ -10,6 +10,8 @@ import {
   FaUserCheck,
   FaUserClock,
   FaUserShield,
+  FaMotorcycle,
+  FaTasks,
 } from "react-icons/fa";
 import useUserRole from "../Hooks/useUserRole";
 
@@ -86,7 +88,17 @@ const DashBoardLayOut = () => {
             </NavLink>
           </li>
           {/* riders links */}
-          {!roleLoading && role == "admin" && (
+          {!roleLoading && role === "rider" && (
+            <>
+              <li>
+                <NavLink to="/dashboard/pendingDeliveries">
+                  <FaTasks className="text-accent" /> Pending Deliveries
+                </NavLink>
+              </li>
+            </>
+          )}
+          {/* Admin links */}
+          {!roleLoading && role === "admin" && (
             <>
               <li>
                 <NavLink to="/dashboard/active-riders">
@@ -96,6 +108,11 @@ const DashBoardLayOut = () => {
               <li>
                 <NavLink to="/dashboard/pending-riders">
                   <FaUserClock className="text-accent" /> Pending Rider
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/dashboard/assign-riders">
+                  <FaMotorcycle className="text-accent" /> Assign Rider
                 </NavLink>
               </li>
               <li>
