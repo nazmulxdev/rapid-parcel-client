@@ -12,6 +12,7 @@ import {
   FaUserShield,
   FaMotorcycle,
   FaTasks,
+  FaCheckCircle,
 } from "react-icons/fa";
 import useUserRole from "../Hooks/useUserRole";
 
@@ -95,6 +96,11 @@ const DashBoardLayOut = () => {
                   <FaTasks className="text-accent" /> Pending Deliveries
                 </NavLink>
               </li>
+              <li>
+                <NavLink to="/dashboard/completedDeliveries">
+                  <FaCheckCircle className="text-accent" /> Completed Deliveries
+                </NavLink>
+              </li>
             </>
           )}
           {/* Admin links */}
@@ -119,6 +125,13 @@ const DashBoardLayOut = () => {
                 {/* admin links */}
                 <NavLink to="/dashboard/manage-admins">
                   <FaUserShield className="text-accent" /> Manage Admins
+                </NavLink>
+              </li>
+              <li>
+                {/* admin links */}
+                <NavLink to="/dashboard/confirm-payment">
+                  <FaUserShield className="text-accent" /> Pending Payment
+                  Request
                 </NavLink>
               </li>
               <li>

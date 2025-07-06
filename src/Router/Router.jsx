@@ -21,6 +21,8 @@ import AdminRoute from "../Routes/AdminRoute";
 import AssignRider from "../Pages/Dashbord/AssignRider/AssignRider";
 import PendingDeliveries from "../Pages/Dashbord/PendingDeliveries/PendingDeliveries";
 import RidersRoute from "../Routes/RidersRoute";
+import MyFinishedDelivery from "../Pages/Dashbord/MyFinishedDelivery/MyFinishedDelivery";
+import ConfirmPayment from "../Pages/Dashbord/ConfirmPayment/ConfirmPayment";
 
 const Router = createBrowserRouter([
   {
@@ -100,6 +102,14 @@ const Router = createBrowserRouter([
           </RidersRoute>
         ),
       },
+      {
+        path: "/dashboard/completedDeliveries",
+        element: (
+          <RidersRoute>
+            <MyFinishedDelivery></MyFinishedDelivery>
+          </RidersRoute>
+        ),
+      },
       // admin only routes
       {
         path: "/dashboard/active-riders",
@@ -130,6 +140,14 @@ const Router = createBrowserRouter([
         element: (
           <AdminRoute>
             <AdminUserManager></AdminUserManager>
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "/dashboard/confirm-payment",
+        element: (
+          <AdminRoute>
+            <ConfirmPayment></ConfirmPayment>
           </AdminRoute>
         ),
       },
